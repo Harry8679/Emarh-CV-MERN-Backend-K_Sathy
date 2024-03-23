@@ -31,7 +31,7 @@ const register = asyncHandler(async (req, res) => {
     try {
         const user = await new User({
             username,
-          password: hashedPassword,
+            password: hashedPassword,
         }).save();
   
         // create signed token
