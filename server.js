@@ -3,6 +3,13 @@ const app = express();
 const dotenv = require('dotenv');
 dotenv.config();
 require('./dbConnect');
+const userRoutes = require('./routes/user.route');
+
+// Routes
+app.use('/api/v1/users', userRoutes);
+
+// Middlewares
+app.use(express.json());
 
 app.get('/', (req, res) => {
     res.send('Hello World!');
