@@ -1,14 +1,15 @@
+const User = require('../models/user.model');
 const { hashPassword } = require("../helpers/auth.helper");
 const jwt = require('jsonwebtoken');
 const asyncHandler = require('express-async-handler');
+require('dotenv').config();
 
 const register = asyncHandler(async (req, res) => {
-    // res.send('Registration');
     const { username, password } = req.body;
     
-    if (!email) {
+    if (!username) {
         return res.json({
-            error: "Email is required",
+            error: "Username is required",
         });
     }
     
@@ -27,10 +28,26 @@ const register = asyncHandler(async (req, res) => {
     // hash password
     const hashedPassword = await hashPassword(password);
 
-    const newUser = new User(req.body);
-    await newUser.save();
+    try {
+        const user = await new User({
+            username,
+          password: hashedPassword,
+        }).save();
+  
+        // create signed token
+        const token = jwt.sign({ _id: user._id }, process.env.JWT_SECRET, {
+          expiresIn: "7d",
+        });
 
-    res.send('Register Successful');
+        return res.json({ token, user });
+    } catch (err) {
+        console.log(err);
+    }
+
+    // const newUser = new User(req.body);
+    // await newUser.save();
+
+    // res.send('Register Successful');
 });
 
 const login = async (req, res) => {
