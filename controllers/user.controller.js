@@ -1,6 +1,8 @@
 const { hashPassword } = require("../helpers/auth.helper");
+const jwt = require('jsonwebtoken');
+const asyncHandler = require('express-async-handler');
 
-const register = async (req, res) => {
+const register = asyncHandler(async (req, res) => {
     // res.send('Registration');
     const { username, password } = req.body;
     
@@ -29,7 +31,7 @@ const register = async (req, res) => {
     await newUser.save();
 
     res.send('Register Successful');
-}
+});
 
 const login = async (req, res) => {
     res.send('Login');
